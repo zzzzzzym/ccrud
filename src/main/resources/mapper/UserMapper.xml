@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.UserMapper" >
+
+    <resultMap id="BaseResultMap" type="com.example.bean.User" >
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <delete id="deleteubyId"  parameterType="java.lang.Integer" >
+        delete from sys_user
+        where
+            id = #{id}
+    </delete>
+
+    <insert id="insert"  parameterType="com.example.bean.User"   >
+        insert into sys_user
+        <trim  prefix="(" suffix=")"  suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="email != null">email,</if>
+            <if test="phone != null">phone,</if>
+            <if test="address != null">address,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim  prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="email != null">#{email},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+    <update id="updateUser" parameterType="com.example.bean.User" >
+        update sys_user
+        set
+        <trim suffixOverrides=",">
+            <if test="username != null">  username = #{username},</if>
+            <if test="password != null">   password= #{password},</if>
+            <if test="nickname != null">  nickname = #{nickname},</if>
+            <if test="email != null">   email = #{email},</if>
+            <if test="phone != null">   phone = #{phone},</if>
+            <if test="address != null">   address = #{address},</if>
+            <if test="createTime != null">  create_time = #{createTime},</if>
+        </trim>
+        where   <if test="id!=null">
+        id = #{id}
+    </if>
+    </update>
+
+<!--    <select id="login" resultMap="BaseResultMap" parameterType="com.example.bean.User" >-->
+<!--        select id, username, password-->
+<!--        from sys_user-->
+<!--        where-->
+<!--            id = #{id} and username = #{username} and password = {password}-->
+<!--    </select>-->
+
+
+    <select id="selectAll" resultMap="BaseResultMap" >
+        select id, username, password, nickname, email, phone, address, create_time
+        from sys_user
+    </select>
+<!--    <select id="selectAll1" resultType="com.example.bean.HospitalUser" >-->
+<!--        select *-->
+<!--        from patient-->
+<!--    </select>-->
+<!--    <select id="selectAll" resultType="com.example.bean.User" >-->
+<!--        select *-->
+<!--        from sys_user-->
+<!--    </select>-->
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+
+        DELETE FROM sys_user
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </delete>
+
+    <select id="searchUsers" parameterType="java.lang.String" resultType="com.example.bean.User">
+<!--        SELECT * FROM sys_user-->
+<!--        WHERE username LIKE CONCAT('%',#{keyword},'%') AND phone LIKE CONCAT('%',#{phone},'%')-->
+    SELECT * FROM sys_user
+    WHERE username LIKE CONCAT('%',#{keyword},'%') AND phone LIKE CONCAT('%',#{phone},'%')
+    </select>
+<select id="findByUsernameAndPassword" resultType="com.example.bean.User" parameterType="com.example.bean.User">
+        SELECT id, username, password, nickname, email, phone, address, create_time
+        FROM sys_user
+        WHERE
+        <if test="username != null">
+            username = #{username}
+        </if>
+        <if test="password != null">
+            AND password = #{password}
+        </if>
+    </select>
+
+    <insert id="register" parameterType="com.example.bean.User" >
+        INSERT INTO sys_user (username, password, address, phone, email)
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="address != null">#{address},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+        </trim>
+    </insert>
+
+    <select id="findByUsername" resultType="com.example.bean.User">
+        SELECT * FROM sys_user WHERE username = #{username}
+    </select>
+    <select id="getUsersByPage" resultType="com.example.bean.User">
+        SELECT * FROM sys_user
+        WHERE username LIKE CONCAT('%', #{username}, '%')
+           OR phone LIKE CONCAT('%', #{phone}, '%')
+            LIMIT #{offset}, #{pageSize}
+    </select>
+</mapper>
