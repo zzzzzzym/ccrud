@@ -14,3 +14,4 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     mapper-locations: classpath:mapper/*.xml
     type-aliases-package: com.example.bean #指明mapper.xml中的实体类的包
+#6666666666666666666
